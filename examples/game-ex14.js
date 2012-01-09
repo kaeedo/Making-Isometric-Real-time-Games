@@ -1,5 +1,6 @@
 // Game class for example 14
-function Game(canvas, game, gridSizeW, gridSizeH) {
+function Game(canvas, game, gridSizeW, gridSizeH) 
+{
 	this.started = true;
 	this.gameContainer = game;
 	this.canvas = canvas;
@@ -30,6 +31,10 @@ function Game(canvas, game, gridSizeW, gridSizeH) {
 	// Tile texture
 	this.tile = new Image();
 	this.tile.src = "../img/tile.png";
+	
+	//building
+	this.building = new Image();
+	this.building.src = "../img/icecream.png";
 
 	// Grid dimensions
 	this.grid = {
@@ -174,8 +179,29 @@ Game.prototype.handleMouseDown = function(e) {
 	}
 
 	switch (Tools.current) {
-		case Tools.BUILD:
-            
+		case Tools.SELECT:
+			this.gridOffsetY = this.canvas.height;
+			this.gridOffsetX = this.canvas.width;
+			this.tileMap = [];
+
+			// Take into account the offset on the X axis caused by centering the grid horizontally
+			this.gridOffsetX += (this.canvas.width / 2) - (this.tile.width / 2);
+
+			this.col = (y - this.gridOffsetY) * 2;
+			this.col = ((this.gridOffsetX + this.col) - x) / 2;
+
+			this.row = ((x + this.col) - this.tile.height) - this.gridOffsetX;
+
+			this.row = Math.round(this.row / this.tile.height);
+			this.col = Math.round(this.col / this.tile.height);
+
+			//this.tileMap[this.row] = (this.tileMap[this.row] === undefined) ? [] : this.tileMap[this.row];
+			this.tileMap[this.row] = this.row;
+
+			this.tileMap[this.row][this.col] = 1;
+			this.draw();
+			
+			
 			break;
 		case Tools.MOVE:
 			this.dragHelper.active = true;
@@ -230,7 +256,9 @@ Game.prototype.translatePixelsToMatrix = function(x, y) {
 	}
 }
 
-Game.prototype.draw = function(srcX, srcY, destX, destY) {
+Game.prototype.draw = function(srcX, srcY, destX, destY)
+{	
+	console.log(this.tileMap[row]);
 	srcX = (srcX === undefined) ? 0 : srcX;
 	srcY = (srcY === undefined) ? 0 : srcY;
 	destX = (destX === undefined) ? this.canvas.width : destX;
@@ -258,6 +286,9 @@ Game.prototype.draw = function(srcX, srcY, destX, destY) {
 
 	var tileHeight = this.tile.height * this.zoomHelper.level;
 	var tileWidth = this.tile.width * this.zoomHelper.level;
+	
+	var buildHeight = this.building.height * this.zoomHelper.level;
+	var buildingWidth = this.building.width * this.zoomHelper.level;
 
 	for (var row = startRow; row < rowCount; row++) {
 		for (var col = startCol; col < colCount; col++) {
@@ -265,15 +296,18 @@ Game.prototype.draw = function(srcX, srcY, destX, destY) {
 			xpos += (this.canvas.width / 2) - ((tileWidth / 2) * this.zoomHelper.level) + this.scrollPosition.x;
 
 			var ypos = (row + col) * (tileHeight / 2) + (this.grid.height * this.zoomHelper.level) + this.scrollPosition.y;
-
+			
+			//console.log(this.tileMap[row]);
 			if (this.tileMap[row] != null && this.tileMap[row][col] != null) {
 				// Place building
+				//this.c.drawImage(building, Math.round(tilePositionX), Math.round(tilePositionY), building.width, building.height);
+				
+				this.c.drawImage(this.building, Math.round(xpos), Math.round(ypos), buildingWidth, buildHeight);
 			} else {
 				if (Math.round(xpos) + tileWidth >= srcX &&
 					Math.round(ypos) + tileHeight >= srcY &&
 					Math.round(xpos) <= destX &&
 					Math.round(ypos) <= destY) {
-
 					this.c.drawImage(this.tile, Math.round(xpos), Math.round(ypos), tileWidth, tileHeight);	
 
 				}

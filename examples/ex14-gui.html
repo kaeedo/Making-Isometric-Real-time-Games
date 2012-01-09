@@ -22,9 +22,9 @@
 		<script src="../utils/modernizr-1.7.min.js" charset="utf-8"></script>
 		<script src="game-ex14.js" charset="utf-8"></script>
 		<script>
-
 			// Enums
-			var Keys = {
+			var Keys =
+			{
 				UP: 38,
 				DOWN: 40,
 				LEFT: 37,
@@ -38,7 +38,8 @@
 				R: 82
 			}
 
-			var Tools = {
+			var Tools =
+			{
 				current: 4, // Default tool
 				/* - */
 				MOVE: 0,
@@ -49,14 +50,15 @@
 				BUILD: 5
 			}
 
-			window.onload = function () {
+			window.onload = function ()
+			{
 
 				var canvas = document.getElementById('gameCanvas');
 				var game = document.getElementById('game');
 
 				// Initialize the game object
 				var g = new Game(canvas, game, 500, 500);
-
+				
 				var pointer = {
 					DOWN: 'mousedown',
 					UP: 'mouseup',
@@ -133,8 +135,10 @@
 					}
 				}, false);
 			}
+			
 
-			function selectTool(tool, elem) {
+			function selectTool(tool, elem) 
+			{
 
 				// Remove the "active" class from any element inside the div#tools ul
 				for (var i = 0, x = elem.parentNode.childNodes.length; i < x; i++) {
@@ -162,7 +166,6 @@
 						Tools.current = Tools.DEMOLISH;
 						break;
 				}
-
 			}
 		</script>
     </head>
